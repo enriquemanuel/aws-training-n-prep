@@ -303,6 +303,7 @@ E-Mail: chandyK@amazon.com
 - 70% of the SysOps Administration is covered by the class
 
 #### How to best prepare
+
 - read the blueprint (it should already be what you covered in the class)
 - Step 4 (The FAQ is **very important**)
 
@@ -498,4 +499,62 @@ E-Mail: chandyK@amazon.com
   - consider purchasing RI for long running instances
   - batch processing jobs can be run in parallel and shut down when its completed
     - maybe consider lambda
-  - aws trusted advisor
+  - AWS Trusted Advisor
+    - core checks and recommendations available to all customers
+    - additional checks recomendations with business and enterprise support plans
+    - checks:
+      - cost
+      - performance
+      - security
+      - fault tolerance
+      - service limit
+  - **TIPS**
+  - EBS GP2 IOPS calculation
+    - X GB * 3 = Y IOPS
+    - 30 GB * 3 = 900 IOPS
+
+### Creating Automated and Repeatable Deployments
+
+- **why**
+  - Launch new resources quickly
+  - deploy configuration changes to running instances
+  - make configurations aurtomated and repeatable
+- **Technologies to configure**
+  - User data
+  - ami
+  - opswork
+  - cloudformation
+- **AMI**
+  - You can create an AMI from an isntance
+  - For Linux (only) on top of the above, you can create an AMI from a volume
+  - For Windows, must run _sysprep_ to strip instance-specific networking information
+    - EC2 Launch supports a Shutdown with _sysprep_ option
+  - AMI's are specific to a region
+  - Copy may fail if AWS cannot find a corresponding Kernel in that region
+- **CloudFormation**
+  - declarative programming language for deploying AWS resources
+  - can be code in YAML or JSON
+  - supports many resources
+  - Steps:
+    - Define a template
+    - Create Stack
+  - WaitCondition and WaitConditionHandle
+    - passes signals between apps when the jobs completes (error or not)
+    - are only binaries (success or not)
+    - its use when bootstrapping a resource
+  - Important to have the outputs
+  - Default Behaviour on failure:
+    - rollback
+      - it removes everything (logs and all)
+    - change the default to "do nothing"
+      - with this the resources are not deleted and you can check the logs.
+    - **Best Practices**
+      - do not embed credentials
+      - use aws specific parameters
+      - use parameters contraints
+      - validate templates before using them
+      - use aws:cnf:init to deploy software application on ec2 instances
+    - **Troubleshooting**
+      - if pushing from s3, bucket needs to be accesible
+      - permissions
+      - missing parameters
